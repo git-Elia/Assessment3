@@ -1,0 +1,48 @@
+config:
+  target: "https://api.todoist.com"
+  phases:
+    - duration: 30
+      arrivalRate: 10
+      name: "Phase 1"
+    - duration: 60
+      arrivalRate: 20
+      name: "Phase 2"
+    - duration: 120
+      arrivalRate: 40
+      name: "Phase 3"
+  defaults:
+    headers:
+      Authorization: Bearer {{ $processEnvironment.TOKEN }}
+      Content-Type: application/json
+  processor: "./myProcessor.js"
+scenarios:
+  - flow:
+      - function: "generateRandomTaskName"
+      - get:
+          url: "/rest/v1/tasks"
+      - post:
+          url: "/rest/v1/tasks"
+          json:
+            content: "Buy {{ productName }}"
+            due_string: "tomorrow at 12:00"
+            due_lang: "en"
+            priority: 4
+          capture: 
+            json: "$.id"
+            as: "idTask"
+      - log: "Current task id is {{ idTask }}"
+      - get:
+          url: "/rest/v1/tasks/{{ idTask }}"
+      - function: "generateRandomTaskName"
+      - post:
+          url: "/rest/v1/tasks/{{ idTask }}"
+          json:
+            content: "Buy {{ productName }} Updated"
+            priority: 1
+      - post:
+          url: "/rest/v1/tasks/{{ idTask }}/close"
+      - post:
+          url: "/rest/v1/tasks/{{ idTask }}/reopen"
+      - delete:
+          url: "/rest/v1/tasks/{{ idTask }}"
+#For more information: https://artillery.io/docs/script-reference/

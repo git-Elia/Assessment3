@@ -1,0 +1,20 @@
+{
+  "name": "artillery",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cross-env TOKEN=eb0683e371e6fe591a2f9e06fe300c2ba08cf88a artillery run --output results/report.json performance.yml && artillery report --output results/report.html results/report.json"
+  },
+  "keywords": [],
+  "author": "Elia Rios",
+  "license": "ISC",
+  "dependencies": {
+    "artillery": "^1.6.2",
+    "dotenv": "^8.2.0",
+    "faker": "^5.4.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  }
+}
